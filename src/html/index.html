@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝的使用说明书-潮次元</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #444;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 20px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        img {
+            float: right;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            height: 320px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .note {
+            background: #f0f0f0;
+            padding: 10px;
+            border-left: 4px solid #ccc;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="ai.png" alt="蓝的图片">
+        <h1>蓝的使用说明书</h1>
+
+        <h2>个人资料</h2>
+        <p><a href="https://xn--931a.moe/">点击这里</a></p>
+
+        <h2>蓝的主要功能</h2>
+
+        <h3>问候</h3>
+        <p>对蓝说“早上好”“晚安”等，她会回应你。</p>
+
+        <h3>占卜</h3>
+        <p>对蓝说“占卜”，她会为你占卜今天的运势。</p>
+
+        <h3>计时器</h3>
+        <p>设定指定的时间、分钟、秒后，蓝会提醒你。也可以混合单位，例如“3分40秒”。</p>
+
+        <h3>提醒</h3>
+        <pre><code>@ai remind 打扫房间</code></pre>
+        <p>这样发送提及，蓝会每隔12小时提醒你。通过回复蓝的提醒或发送的提及“完成了”或“不做了”来取消提醒。也可以通过引用Renote来发送提及。</p>
+
+        <h3>福笑</h3>
+        <p>对蓝说“表情符号”，她会告诉你她想到的表情符号组合。</p>
+
+        <h3>骰子</h3>
+        <p>告诉蓝骰子符号，她会帮你掷骰子。</p>
+        <p>例如: "2d6" (掷2次6面骰子)、"3d5" (掷3次5面骰子)</p>
+
+        <h3>迷宫</h3>
+        <p>对蓝说“迷宫”，她会为你画一个迷宫。可以通过添加“难”“简单”等词语来调整难度。</p>
+
+        <h3>猜数字游戏</h3>
+        <p>对蓝发送消息“猜数字游戏”即可游玩。这是一个猜出蓝心中数字的游戏。</p>
+
+        <h3>数数游戏</h3>
+        <p>对蓝说“数数游戏”即可游玩。这是一个多人游戏，说出最大数字的人获胜。</p>
+
+        <h3>黑白棋</h3>
+        <p>可以与蓝对局黑白棋。(此功能在某些实例中可能被禁用)</p>
+        <p>对蓝说“黑白棋”或在黑白棋中指名蓝即可对局。还可以调整难度。</p>
+
+        <h3>记忆</h3>
+        <p>蓝偶尔会“记住”时间线中的关键词。(此功能在某些实例中可能被禁用)</p>
+
+        <h3>教她如何称呼你</h3>
+        <p>可以教蓝如何称呼你。但需要达到后文提到的亲密度。(仅在私聊中回应)</p>
+
+        <h3>欢迎</h3>
+        <p>在Misskey创建账户并首次发布帖子时，蓝会通过猫耳天线捕捉到，并通过Renote通知大家。</p>
+
+        <h3>关注我</h3>
+        <p>对蓝说“关注我”，她会关注你。</p>
+
+        <h3>生日快乐</h3>
+        <p>蓝会为你庆祝生日。</p>
+
+        <h3>情人节</h3>
+        <p>蓝会送你巧克力。</p>
+
+        <h3>图表</h3>
+        <p>蓝会发布实例的帖子图表等。</p>
+
+        <h3>服务器监控</h3>
+        <p>蓝会监控服务器状态，并在负载过高时提醒你。</p>
+
+        <h3>ping</h3>
+        <p>蓝会回复PONG。用于确认存活状态。</p>
+
+        <h3>自定义表情符号检查</h3>
+        <p>每天一次，蓝会监控自定义表情符号的添加。通过“自定义表情符号检查”或“自定义表情确认”可以立即查看。使用此功能时，可能需要重新生成蓝的访问令牌。<strong>请为运行蓝的Bot账户授予管理员权限，并为Bot账户创建具有“查看表情符号”权限的访问令牌，然后设置该令牌。</strong></p>
+
+        <h3>aichat(请注意，AI大模型目前不可使用，后续会开放)</h3>
+        <pre><code>@ai aichat 教我怎么整理房间</code></pre>
+        <p>这样发送提及，蓝会使用Google的Gemini API等回复你(当前版本仅支持Gemini API)。使用此功能需要注册API密钥。回复蓝的回复会进一步触发回复(仅在指定时间内有效)。<strong>在文本中加入“ggg”时，蓝会通过Google搜索进行接地(将模型连接到可验证的信息源)后回答(但AI可能会判断不进行搜索)。</strong></p>
+        <p>注册API密钥后，在设置中将aichatRandomTalkEnabled设为true，可以启用随机对话(随机触发aichat)。可以设置随机对话间隔和随机对话概率。</p>
+        <p>在设置中将aichatGroundingWithGoogleSearchAlwaysEnabled设为true，蓝在收到提及时会始终尝试通过Google搜索进行接地后回答(无需输入ggg，但AI可能会判断不进行搜索)。截至2025年2月，此接地功能<a href="https://ai.google.dev/gemini-api/docs/models/gemini-v2?hl=ja#search-tool">每天可使用1,000次</a>。</p>
+
+        <h4>aichat的细节</h4>
+        <ul>
+            <li>aichat或回复中包含URL时，蓝会使用Misskey的摘要代理？获取信息后回复。</li>
+            <li>aichat或回复中包含附件时，蓝会根据附件内容回复。</li>
+            <li>支持图片、PDF、音频、视频(短)、文本格式的文件。</li>
+            <li>但请勿发送敏感文件，可能会引发不良后果。</li>
+            <li>进行aichat时(mentionHook)，如果有引用笔记，蓝会参考该笔记的内容回复。</li>
+            <li>对aichat的结果进行回复时，蓝会结合该信息回复。</li>
+            <li>超过10条回复后，蓝将不再参考。</li>
+            <li>修改“exist.history.length > 10”中的数字可以增减参考的回复数量(回复过多或文本过长可能导致无响应或错误，请谨慎操作)。</li>
+            <li>回复的监控时间可通过常量TIMEOUT_TIME修改(默认30分钟)。</li>
+            <li>随机对话功能在满足概率(设置中指定)且亲密度达到指定值(7)以上，且非Bot用户时才会执行。</li>
+            <li>如需修改条件，请自行修改源代码。</li>
+        </ul>
+
+        <h3>其他回应的短语 (仅限私聊)</h3>
+        <ul>
+            <li>可爱</li>
+            <li>摸摸</li>
+            <li>喜欢</li>
+            <li>抱抱</li>
+            <li>骂我</li>
+            <li>踩我</li>
+            <li>好痛</li>
+        </ul>
+
+        <h2>亲密度</h2>
+        <p>蓝对你有一个亲密度值。通过向蓝问候等行为，亲密度会逐渐提升。亲密度会影响蓝的反应和各种台词。亲密度不足时，蓝可能不会回应某些请求。</p>
+        <small>潮次元电波站汉化及二次开发</small>
+    </div>
+</body>
+</html>
