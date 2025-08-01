@@ -492,7 +492,7 @@ export default class extends Module {
 		}
 
 		this.log('Replying...');
-		msg.reply(serifs.aichat.post(text || '默认回复', exist.type)).then(reply => {
+		msg.reply(text || '默认回复').then(reply => {
 			if (!exist.history) {
 				exist.history = [];
 			}
