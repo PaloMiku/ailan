@@ -86,7 +86,7 @@ const GEMINI_FLASH = 'gemini-flash';
 const TYPE_PLAMO = 'plamo';
 const GROUNDING_TARGET = 'ggg';
 
-const GEMINI_20_FLASH_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+const deepseek_api = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 // const GEMINI_15_FLASH_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 const GEMINI_15_PRO_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent';
 const PLAMO_API = 'https://platform.preferredai.jp/api/completion/v1/chat/completions';
@@ -602,7 +602,7 @@ export default class extends Module {
 
 		// Gemini API用にAPIのURLと置き換え用タイプを変更
 		if (msg.includes([KIGO + GEMINI_FLASH])) {
-			exist.api = GEMINI_20_FLASH_API;
+			exist.api = deepseek_api;
 			reKigoType = RegExp(KIGO + GEMINI_FLASH, 'i');
 		} else if (msg.includes([KIGO + GEMINI_PRO])) {
 			exist.api = GEMINI_15_PRO_API;
@@ -644,7 +644,7 @@ export default class extends Module {
 				aiChat = {
 					question: question,
 					prompt: prompt,
-					api: GEMINI_20_FLASH_API,
+					api: deepseek_api,
 					key: config.geminiProApiKey,
 					history: exist.history,
 					friendName: friendName,

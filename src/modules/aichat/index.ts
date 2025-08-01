@@ -16,7 +16,6 @@ type AiChat = {
 	key: string;
 	fromMention: boolean;
 	friendName?: string;
-	grounding?: boolean;
 	history?: { role: string; content: string }[];
 };
 type base64File = {
@@ -55,7 +54,6 @@ type AiChatHist = {
 	type: string;
 	fromMention: boolean;
 	api?: string;
-	grounding?: boolean;
 	history?: {
 		role: string;
 		content: string;
@@ -83,12 +81,9 @@ const KIGO = '&';
 const TYPE_GEMINI = 'gemini';
 const GEMINI_PRO = 'gemini-pro';
 const GEMINI_FLASH = 'gemini-flash';
-const TYPE_PLAMO = 'plamo';
-const GROUNDING_TARGET = 'ggg';
 
-const GEMINI_20_FLASH_API = 'https://yunwu.ai/v1/chat/completions';
+const deepseek_api = 'https://api.deepseek.com/v1/chat/completions';
 const GEMINI_15_PRO_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent';
-const PLAMO_API = 'https://platform.preferredai.jp/api/completion/v1/chat/completions';
 
 const RANDOMTALK_DEFAULT_PROBABILITY = 0.02;
 const TIMEOUT_TIME = 1000 * 60 * 60 * 0.5;
@@ -96,7 +91,7 @@ const RANDOMTALK_DEFAULT_INTERVAL = 1000 * 60 * 60 * 12;
 
 export default class extends Module {
 	public readonly name = 'aichat';
-	private aichatHist: loki.Collection<AiChatHist>;
+	private aichatHist!: loki.Collection<AiChatHist>;
 	private randomTalkProbability: number = RANDOMTALK_DEFAULT_PROBABILITY;
 	private randomTalkIntervalMinutes: number = RANDOMTALK_DEFAULT_INTERVAL;
 
@@ -115,7 +110,6 @@ export default class extends Module {
 		this.log('aichatRandomTalkEnabled:' + config.aichatRandomTalkEnabled);
 		this.log('randomTalkProbability:' + this.randomTalkProbability);
 		this.log('randomTalkIntervalMinutes:' + (this.randomTalkIntervalMinutes / (60 * 1000)));
-		this.log('aichatGroundingWithGoogleSearchAlwaysEnabled:' + config.aichatGroundingWithGoogleSearchAlwaysEnabled);
 
 		if (config.aichatRandomTalkEnabled) {
 			setInterval(this.aichatRandomTalk, this.randomTalkIntervalMinutes);
@@ -147,9 +141,6 @@ export default class extends Module {
 		}
 		if (!aiChat.fromMention) {
 			systemContent += '请注意这是非主动发起的对话。';
-		}
-		if (aiChat.grounding) {
-			systemContent += '请使用Google搜索验证信息。';
 		}
 
 		if (aiChat.question) {
@@ -190,7 +181,7 @@ export default class extends Module {
 				'Authorization': `Bearer ${aiChat.key}`
 			},
 			json: {
-				model: 'gpt-3.5-turbo',
+				model: 'deepseek-chat',
 				messages: messages,
 				temperature: 0.7
 			}
@@ -203,53 +194,12 @@ export default class extends Module {
 			this.log(JSON.stringify(res_data, null, 2));
 			
 			if (res_data.choices?.[0]?.message?.content) {
-				return res_data.choices[0].message.content + "\n[知识溯源已启用]";
+				return res_data.choices[0].message.content;
 			}
 		} catch (err) {
 			this.log('API调用错误：');
 			if (err instanceof Error) {
 				this.log(`${err.name}: ${err.message}`);
-			}
-		}
-		return null;
-	}
-
-	@bindThis
-	private async genTextByPLaMo(aiChat: AiChat) {
-		this.log('Generate Text By PLaMo...');
-
-		let options = {
-			url: aiChat.api,
-			headers: {
-				Authorization: 'Bearer ' + aiChat.key
-			},
-			json: {
-				model: 'plamo-beta',
-				messages: [
-					{role: 'system', content: aiChat.prompt},
-					{role: 'user', content: aiChat.question},
-				],
-			},
-		};
-		this.log(JSON.stringify(options));
-		let res_data:any = null;
-		try {
-			res_data = await got.post(options,
-				{parseJson: (res: string) => JSON.parse(res)}).json();
-			this.log(JSON.stringify(res_data));
-			if (res_data.hasOwnProperty('choices')) {
-				if (res_data.choices.length > 0) {
-					if (res_data.choices[0].hasOwnProperty('message')) {
-						if (res_data.choices[0].message.hasOwnProperty('content')) {
-							return res_data.choices[0].message.content;
-						}
-					}
-				}
-			}
-		} catch (err: unknown) {
-			this.log('Error By Call PLaMo');
-			if (err instanceof Error) {
-				this.log(`${err.name}\n${err.message}\n${err.stack}`);
 			}
 		}
 		return null;
@@ -319,8 +269,6 @@ export default class extends Module {
 			type = 'chatgpt4';
 		} else if (msg.includes([KIGO + 'chatgpt'])) {
 			type = 'chatgpt3.5';
-		} else if (msg.includes([KIGO + TYPE_PLAMO])) {
-			type = TYPE_PLAMO;
 		}
 		const current : AiChatHist = {
 			postId: msg.id,
@@ -489,18 +437,11 @@ export default class extends Module {
 		if (extractedText == undefined || extractedText.length == 0) return false;
 
 		if (msg.includes([KIGO + GEMINI_FLASH])) {
-			exist.api = GEMINI_20_FLASH_API;
+			exist.api = deepseek_api;
 			reKigoType = RegExp(KIGO + GEMINI_FLASH, 'i');
 		} else if (msg.includes([KIGO + GEMINI_PRO])) {
 			exist.api = GEMINI_15_PRO_API;
 			reKigoType = RegExp(KIGO + GEMINI_PRO, 'i');
-		}
-
-		if (msg.includes([GROUNDING_TARGET])) {
-			exist.grounding = true;
-		}
-		if (exist.fromMention && config.aichatGroundingWithGoogleSearchAlwaysEnabled) {
-			exist.grounding = true;
 		}
 
 		const friend: Friend | null = this.ai.lookupFriend(msg.userId);
@@ -516,7 +457,6 @@ export default class extends Module {
 		const question = extractedText
 							.replace(reName, '')
 							.replace(reKigoType, '')
-							.replace(GROUNDING_TARGET, '')
 							.trim();
 		switch (exist.type) {
 			case TYPE_GEMINI:
@@ -528,7 +468,7 @@ export default class extends Module {
 				aiChat = {
 					question: question,
 					prompt: prompt,
-					api: GEMINI_20_FLASH_API,
+					api: deepseek_api,
 					key: config.geminiProApiKey,
 					history: exist.history,
 					friendName: friendName,
@@ -537,27 +477,7 @@ export default class extends Module {
 				if (exist.api) {
 					aiChat.api = exist.api;
 				}
-				if (exist.grounding) {
-					aiChat.grounding = exist.grounding;
-				}
 				text = await this.genTextByGemini(aiChat, base64Files);
-				break;
-
-			case TYPE_PLAMO:
-				if (!config.pLaMoApiKey) {
-					msg.reply(serifs.aichat.nothing(exist.type));
-					return false;
-				}
-				aiChat = {
-					question: msg.text,
-					prompt: prompt,
-					api: PLAMO_API,
-					key: config.pLaMoApiKey,
-					history: exist.history,
-					friendName: friendName,
-					fromMention: exist.fromMention
-				};
-				text = await this.genTextByPLaMo(aiChat);
 				break;
 
 			default:
@@ -587,7 +507,6 @@ export default class extends Module {
 				type: exist.type,
 				api: aiChat.api,
 				history: exist.history,
-				grounding: exist.grounding,
 				fromMention: exist.fromMention,
 			});
 
